@@ -1,3 +1,5 @@
+"use strict";
+
 // DOM Elements
 const flipCard = document.querySelector('.flip-card');
 const flipCardInner = document.querySelector('.flip-card-inner');
@@ -120,7 +122,6 @@ nextButton.addEventListener('click', () => {
 
 shuffleButton.addEventListener('click', () => {
     words = words.sort(() => Math.random() - 0.5);
-    currentIndex = 0;
     updateStudyUI();
     saveProgress();
 });
@@ -164,7 +165,7 @@ const renderExamCards = () => {
     });
 };
 
-let attemptTracker = {};
+const attemptTracker = {};
 words.forEach((item) => {
     attemptTracker[item.word] = 0;
 });
@@ -172,7 +173,7 @@ words.forEach((item) => {
 let selectedCards = [];
 
 const handleExamCardClick = (card) => {
-    if (selectedCards.length < 2 && !card.classList.contains('fade-out')) {
+    if (selectedCards.length < 2 && !card.classList.contains('fade-out') && !selectedCards.includes(card)) {
         selectedCards.push(card);
         card.classList.add('correct');
         if (selectedCards.length === 2) {
@@ -204,7 +205,6 @@ const handleExamCardClick = (card) => {
 const checkExamCompletion = () => {
     if (matchedPairs === words.length) {
         showResults();
-        saveProgress();
     }
 };
 
@@ -225,6 +225,8 @@ const showResults = () => {
         template.querySelector('.attempts span').textContent = attempts;
         resultsContent.append(template);
     });;
+
+    localStorage.clear();
 };
 
 // Initialize Application
